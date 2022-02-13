@@ -11,7 +11,6 @@ require('dotenv').config()
 app.use(cors());
 app.use(express.json());
 
-
 // connection
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jbkru.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -23,13 +22,18 @@ try{
     await client.connect();
     const database = client.db('watch-shop');
     const allWatchCollection = database.collection('watchAll');
+    const usersCollection = database.collection('users')
 
 
     // get all watch
     app.get('/watchAll', async(req, res)=>{
         const result = await allWatchCollection.find({}).toArray();
         res.json(result);
+    })
 
+    app.get('/users', async(req, res)=>{
+        const result = await usersCollection.find({}).toArray();
+        res.json(result)
     })
 }
 finally {
